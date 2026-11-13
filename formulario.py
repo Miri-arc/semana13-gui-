@@ -15,13 +15,14 @@ class FormularioRegistro:
         # Variables del formulario
         self.nombre = tk.StringVar()
         self.email = tk.StringVar()
+        self.celular = tk.StringVar()
         self.password = tk.StringVar()
         self.confirm_pass = tk.StringVar()
         self.edad = tk.StringVar()
         self.genero = tk.StringVar(value="Sin seleccionar")
         self.acepto = tk.BooleanVar(value=False)
 
-        # Crear los elementos
+        # Crear los elementos del formulario
         self.crear_widgets()
 
     def crear_widgets(self):
@@ -49,6 +50,7 @@ class FormularioRegistro:
         campos = [
             ("Nombre completo:", self.nombre, False),
             ("Email:", self.email, False),
+            ("Celular:", self.celular, False),
             ("Contraseña:", self.password, True),
             ("Confirmar contraseña:", self.confirm_pass, True),
             ("Edad:", self.edad, False)
@@ -61,7 +63,7 @@ class FormularioRegistro:
                 text=label,
                 anchor="e"
             ).grid(
-                row=i+1,
+                row=i + 1,
                 column=0,
                 sticky="e",
                 pady=5,
@@ -76,7 +78,7 @@ class FormularioRegistro:
             )
 
             entry.grid(
-                row=i+1,
+                row=i + 1,
                 column=1,
                 pady=5,
                 sticky="w"
@@ -87,7 +89,7 @@ class FormularioRegistro:
             frame,
             text="Genero:"
         ).grid(
-            row=6,
+            row=7,
             column=0,
             sticky="e",
             pady=5
@@ -95,7 +97,7 @@ class FormularioRegistro:
 
         genero_frame = tk.Frame(frame)
         genero_frame.grid(
-            row=6,
+            row=7,
             column=1,
             sticky="w"
         )
@@ -108,13 +110,13 @@ class FormularioRegistro:
                 value=opcion
             ).pack(side="left", padx=3)
 
-        # Casilla de terminos
+        # Casilla de terminos y condiciones
         tk.Checkbutton(
             frame,
             text="Acepto los terminos y condiciones",
             variable=self.acepto
         ).grid(
-            row=7,
+            row=8,
             column=0,
             columnspan=2,
             pady=10
@@ -123,7 +125,7 @@ class FormularioRegistro:
         # Contenedor de botones
         btn_frame = tk.Frame(frame)
         btn_frame.grid(
-            row=8,
+            row=9,
             column=0,
             columnspan=2,
             pady=15
@@ -153,9 +155,11 @@ class FormularioRegistro:
 
         # Validar nombre
         if not self.nombre.get().strip():
-            errores.append("El nombre es obligatorio")
+            errores.append(
+                "El nombre es obligatorio"
+            )
 
-        # Validar correo
+        # Validar correo electronico
         email = self.email.get().strip()
 
         if not re.fullmatch(
@@ -163,6 +167,14 @@ class FormularioRegistro:
         ):
             errores.append(
                 "Email invalido (debe contener @ y dominio)"
+            )
+
+        # Validar celular 
+        celular = self.celular.get().strip()
+
+        if not re.fullmatch(r"9\d{8}", celular):
+            errores.append(
+                "El celular debe tener 9 digitos y empezar con 9"
             )
 
         # Validar contraseña
@@ -213,13 +225,15 @@ class FormularioRegistro:
             messagebox.showinfo(
                 "Registro exitoso",
                 f"¡Bienvenido {self.nombre.get()}!\n"
-                f"Email: {self.email.get()}"
+                f"Email: {self.email.get()}\n"
+                f"Celular: {self.celular.get()}"
             )
 
     # Limpiar todos los campos
     def limpiar(self):
         self.nombre.set("")
         self.email.set("")
+        self.celular.set("")
         self.password.set("")
         self.confirm_pass.set("")
         self.edad.set("")
@@ -227,7 +241,7 @@ class FormularioRegistro:
         self.acepto.set(False)
 
 
-# Ejecutar el programa
+# Ejecutar el formulario
 if __name__ == "__main__":
     app = FormularioRegistro()
     app.root.mainloop()
